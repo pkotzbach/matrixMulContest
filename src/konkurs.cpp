@@ -79,10 +79,10 @@ void randomCheck()
     MyRefAlgebra::CMtx Ref2(SIZE_X_2, SIZE_COM, true);
 
     int total_size = SIZE_Y_1 * SIZE_X_2;
-
+    
+    int it = 1;
     if (total_size < MyAlgebra::MEDIUM_MATRIX_BOUND) it = 100;
     else if (total_size < MyAlgebra::BIG_MATRIX_BOUND) it = 10;
-    else it = 1;
 
     std::cout << "SIZE_COM: " << SIZE_COM << ", SIZE_Y_1: " << SIZE_Y_1 << ", SIZE_X_2: " << SIZE_X_2 << ", it: " << it << std::endl;
 
