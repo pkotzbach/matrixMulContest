@@ -65,19 +65,9 @@ double test(int SIZE, int ITER_CNT)
     return exec_time;
 }
 
-int st = 100;
-
-#include "RefAlgebra/include/RefAlgebra/CMtx.h"
-
-
 void randomCheck()
 {
-    //st += 1;
-    //const int SIZE_X = st;
     const int bound = 2000;
-    //const int SIZE_COM = bound;
-    //const int SIZE_Y_1 = bound;
-    //const int SIZE_X_2 = bound;
     const int SIZE_COM = rand() % bound + 1;
     const int SIZE_Y_1 = rand() % bound + 1;
     const int SIZE_X_2 = rand() % bound + 1;
@@ -90,10 +80,9 @@ void randomCheck()
 
     int total_size = SIZE_Y_1 * SIZE_X_2;
 
-    int it = 1;
-    //if (total_size < MyAlgebra::MEDIUM_MATRIX_BOUND) it = 100;
-    //else if (total_size < MyAlgebra::BIG_MATRIX_BOUND) it = 10;
-    //else it = 1;
+    if (total_size < MyAlgebra::MEDIUM_MATRIX_BOUND) it = 100;
+    else if (total_size < MyAlgebra::BIG_MATRIX_BOUND) it = 10;
+    else it = 1;
 
     std::cout << "SIZE_COM: " << SIZE_COM << ", SIZE_Y_1: " << SIZE_Y_1 << ", SIZE_X_2: " << SIZE_X_2 << ", it: " << it << std::endl;
 
@@ -149,26 +138,23 @@ void randomCheck()
         }
 
     std::cout << exec_time1 / exec_time2;
-    if (exec_time1 / exec_time2 < 2) std::cout << " - SLABO!!!!!!!!!!!!!!!!!!!!!";
     std::cout << "\n";
 }
 
 void checkTime()
 {
-    st += 1;
-    const int SIZE_X = st;
-    //const int SIZE_X = rand() % 1500 + 1;
+    const int bound = 1500;
+    const int SIZE_X = rand() % bound + 1;
     const int SIZE_Y = SIZE_X;
     MyAlgebra::CMtx My(SIZE_X, SIZE_Y, true);
 
     const float PREC = 0.0001;
 
-    int it = 2;
+    int it = 1;
     if (SIZE_X * SIZE_X < MyAlgebra::MEDIUM_MATRIX_BOUND) it = 1000;
     else if (SIZE_X * SIZE_X < MyAlgebra::BIG_MATRIX_BOUND) it = 10;
-    else it = 1;
 
-    //std::cout << "size: " << SIZE_X << ", it: " << it << std::endl;
+    std::cout << "size: " << SIZE_X << ", it: " << it << std::endl;
 
     double t1;
     t1 = mygettime();
@@ -189,7 +175,6 @@ void checkTime()
 
 bool isCorrect()
 {
-    //const int SIZE_X = rand() % 1000 + 50;
     const int SIZE_X = rand() % 1300 + 1;
     const int SIZE_Y = SIZE_X;
     const float PREC = 0.0000001;
@@ -232,7 +217,6 @@ bool isCorrect()
             if (abs(My[i][j] - Ref[i][j]) > PREC) {
                 std::cout << "My: " << My[i][j] << ", Ref: "<< Ref[i][j] << std::endl;
                 std::cout << "i: " << i << ", j: " << j << std::endl;
-                throw std::exception();
                 return false;
             }
             //std::cout << abs(My[i][j] - Ref[i][j]) << std::endl;
@@ -251,8 +235,8 @@ int main()
     //for (int i = 0; i < 5; i++)
     //    std::cout << isCorrect() << std::endl;
 
-    for (int i = 0; i < 10000; i++)
-        randomCheck();
+    // for (int i = 0; i < 100; i++)
+    //     randomCheck();
 
     //for (int i = 0; i < 400; i++)
     //    checkTime();
@@ -264,7 +248,7 @@ int main()
     int size_tab[cases] = { 29, 256 + offset, 1024 + offset, 1500, 2048 + offset};
     int iter_tab[cases] = { 10000, 100, 4, 1, 1};
 
-    //zestaw testow dla wszystkich
+    //all tests
     if (0) {
         float ref_times[cases];
         float test_times[cases];
@@ -303,17 +287,17 @@ int main()
             }
     }
     
-    //pojedynczy wybrany test
+    //one given test
     if (0) {
-        int j = 0; //id wybranego
-        std::cout << "SIZE: " << size_tab[j] << ", ITER: " << iter_tab[j] << std::endl;
+        int id = 0; //id of test
+        std::cout << "SIZE: " << size_tab[id] << ", ITER: " << iter_tab[id] << std::endl;
 
         t_ref = 1;
-        t_ref = test<MyRefAlgebra::CMtx>(size_tab[j], iter_tab[j]);
+        t_ref = test<MyRefAlgebra::CMtx>(size_tab[id], iter_tab[id]);
         printf("Czas wykonania referencyjny: %7.2lfs\n", t_ref);
 
         for (int i = 0; i < TEST; ++i) {
-            t_prog = test<MyAlgebra::CMtx>(size_tab[j], iter_tab[j]);
+            t_prog = test<MyAlgebra::CMtx>(size_tab[id], iter_tab[id]);
 
             printf("Czas wykonania testowany:    %7.2lfs\n", t_prog);
             printf("Wspolczynnik przyspieszenia Q: %5.2lf\n", t_ref / t_prog);
@@ -327,7 +311,6 @@ int main()
 
         printf("Sredni czas wykonania:       %7.2lfs\n\n", result / TEST);
     }
-
 
     return 0;
 }

@@ -105,7 +105,7 @@ CMtx CMtx::operator+(const CMtx& otherM) const
         for (int y = 0; y < m_rows; y++)
             result.m_matrix[x][y] = this->m_matrix[x][y] + otherM.m_matrix[x][y];
 
-    return std::move(result); //??
+    return std::move(result);
 }
 
 CMtx CMtx::operator-(const CMtx& otherM) const

@@ -13,7 +13,7 @@ namespace MyRefAlgebra
     class CMtx
     {
     protected:
-        float** m_matrix; //bylo FPTYPE, powinien byc float?
+        float** m_matrix;
         int     m_rows;
         int     m_columns;
 

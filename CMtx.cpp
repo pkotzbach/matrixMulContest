@@ -243,7 +243,7 @@ void CMtx::mulTilesSIMD(const CMtx& otherM, CMtx& result, int x1, int y1, int x2
     int bound_x = 0;
     int bound_y = 0;
 
-    const int blocking_val = 4; //ile razy rozwijamy funkcje
+    const int blocking_val = 4;
     float* a_it;
     float* r_it[blocking_val];
 
@@ -298,7 +298,7 @@ void CMtx::mulBigMatrix(const CMtx& otherM, CMtx& result) const
     std::cout << "mulBigMatrix" << std::endl;
 #endif // DEBUG
 
-    //wielkosci pod tiling
+    //sizes for tiling
     const int N_y = result.m_rows / T_y * T_y;
     const int N_x = result.m_columns / T_x * T_x;
     const int N_y_by_2 = (result.m_rows / 2) / T_y * T_y;
@@ -329,9 +329,9 @@ void CMtx::mulBigMatrix(const CMtx& otherM, CMtx& result) const
         for (int x = N_x; x < result.m_columns; x++) {
             r_it = result.m_matrix[x];
             for (int i = 0; i < this->m_columns; i++) {
-                a_it = m_matrix[i]; //macierz musi miec min 8 wysokosci
+                a_it = m_matrix[i];
                 b = _mm256_set1_ps(otherM.m_matrix[x][i]);
-                for (int y = 0; y < N_y; y += IN_SIMD) { //N_y jest podzielne przez 8
+                for (int y = 0; y < N_y; y += IN_SIMD) {
                     //result.m_matrix[x][y] += this->m_matrix[i][y] * otherM.m_matrix[x][i];
                     _mm256_store_ps(&r_it[y], _mm256_add_ps(_mm256_mul_ps(_mm256_load_ps(&a_it[y]), b), _mm256_load_ps(&r_it[y])));
                 }
@@ -341,7 +341,7 @@ void CMtx::mulBigMatrix(const CMtx& otherM, CMtx& result) const
 
     float b_comp;
 
-    //N_y i powielenie
+    //N_y and duplication
     if (N_y < result.m_rows) {
         for (int x = 0; x < result.m_columns; x++) {
             r_it = result.m_matrix[x];
@@ -359,7 +359,7 @@ void CMtx::mulBigMatrix(const CMtx& otherM, CMtx& result) const
         for (int x = 0; x < N_x; x++) {
             r_it = result.m_matrix[x];
             for (int i = N_mul; i < this->m_columns; i++) {
-                a_it = m_matrix[i]; //macierz musi miec min 8 wysokosci
+                a_it = m_matrix[i];
                 b = _mm256_set1_ps(otherM.m_matrix[x][i]);
                 for (int y = 0; y < N_y; y += IN_SIMD) { //N_y jest podzielne przez 8
                     //result.m_matrix[x][y] += this->m_matrix[i][y] * otherM.m_matrix[x][i];
@@ -376,7 +376,7 @@ void CMtx::mulMediumMatrix(const CMtx& otherM, CMtx& result) const
     std::cout << "mulMediumMatrix" << std::endl;
 #endif // DEBUG
 
-    //wielkosci pod tiling
+    //sizes for tiling
     const int N_y = result.m_rows / T_y * T_y;
     const int N_x = result.m_columns / T_x * T_x;
     const int N_mul = m_columns / T_i * T_i;
@@ -391,9 +391,9 @@ void CMtx::mulMediumMatrix(const CMtx& otherM, CMtx& result) const
         for (int x = N_x; x < result.m_columns; x++) {
             r_it = result.m_matrix[x];
             for (int i = 0; i < this->m_columns; i++) {
-                a_it = m_matrix[i]; //macierz musi miec min 8 wysokosci
+                a_it = m_matrix[i];
                 b = _mm256_set1_ps(otherM.m_matrix[x][i]);
-                for (int y = 0; y < N_y; y += IN_SIMD) { //N_y jest podzielne przez 8
+                for (int y = 0; y < N_y; y += IN_SIMD) {
                     //result.m_matrix[x][y] += this->m_matrix[i][y] * otherM.m_matrix[x][i];
                     _mm256_store_ps(&r_it[y], _mm256_add_ps(_mm256_mul_ps(_mm256_load_ps(&a_it[y]), b), _mm256_load_ps(&r_it[y])));
                 }
@@ -403,7 +403,7 @@ void CMtx::mulMediumMatrix(const CMtx& otherM, CMtx& result) const
 
     float b_comp;
 
-    //N_y i powielenie
+    //N_y and duplication
     if (N_y < result.m_rows) {
         for (int x = 0; x < result.m_columns; x++) {
             r_it = result.m_matrix[x];
@@ -421,9 +421,9 @@ void CMtx::mulMediumMatrix(const CMtx& otherM, CMtx& result) const
         for (int x = 0; x < N_x; x++) {
             r_it = result.m_matrix[x];
             for (int i = N_mul; i < this->m_columns; i++) {
-                a_it = m_matrix[i]; //macierz musi miec min 8 wysokosci
+                a_it = m_matrix[i];
                 b = _mm256_set1_ps(otherM.m_matrix[x][i]);
-                for (int y = 0; y < N_y; y += IN_SIMD) { //N_y jest podzielne przez 8
+                for (int y = 0; y < N_y; y += IN_SIMD) {
                     //result.m_matrix[x][y] += this->m_matrix[i][y] * otherM.m_matrix[x][i];
                     _mm256_store_ps(&r_it[y], _mm256_add_ps(_mm256_mul_ps(_mm256_load_ps(&a_it[y]), b), _mm256_load_ps(&r_it[y])));
                 }
@@ -484,9 +484,9 @@ void CMtx::mulSmallMatrix(const CMtx& otherM, CMtx& result) const
         for (int x = N_x; x < result.m_columns; x++) {
             r_it[0] = result.m_matrix[x];
             for (int i = 0; i < m_columns; i++) {
-                a_it = m_matrix[i]; //macierz musi miec min 8 wysokosci
+                a_it = m_matrix[i];
                 b[0] = _mm256_set1_ps(otherM.m_matrix[x][i]);
-                for (int y = 0; y < N_y; y += IN_SIMD) { //N_y jest podzielne przez 8
+                for (int y = 0; y < N_y; y += IN_SIMD) {
                     //result.m_matrix[x][y] += this->m_matrix[i][y] * otherM.m_matrix[x][i];
                     _mm256_store_ps(&r_it[0][y], _mm256_add_ps(_mm256_mul_ps(_mm256_load_ps(&a_it[y]), b[0]), _mm256_load_ps(&r_it[0][y])));
                 }
